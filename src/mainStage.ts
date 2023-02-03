@@ -1,14 +1,8 @@
-import {
-  Color3,
-  Engine,
-  MeshBuilder,
-  PointLight,
-  TransformNode,
-  Vector3,
-} from "@babylonjs/core";
+import { Color3, Engine, MeshBuilder, PointLight, TransformNode, Vector3 } from "@babylonjs/core";
 import { DEGREE } from "./consts";
 import { createMaterial, createUndergroundMaterial } from "./materials";
 import { Plant } from "./plant";
+import { Water } from "./Water";
 
 const groundWidth = 100;
 const groundDepth = 1;
@@ -17,6 +11,9 @@ export const createMainStage = () => {
   createGround();
   createSky();
   new Plant();
+  const w = new Water();
+  w.transform.position = new Vector3(-2, -2, 0);
+  w.consumed();
   return createUnderground();
 };
 
@@ -48,11 +45,7 @@ function createUnderground() {
   dirt.material = createUndergroundMaterial();
   dirt.position.y = -groundWidth / 2;
   dirt.position.z = -0;
-  const light = new PointLight(
-    "point",
-    new Vector3(0, 0, -0.5),
-    Engine.LastCreatedScene!
-  );
+  const light = new PointLight("point", new Vector3(0, 0, -0.5), Engine.LastCreatedScene!);
   light.radius = 1;
   light.range = 5;
   light.intensity = 1;
@@ -62,11 +55,7 @@ function createUnderground() {
 }
 
 function createSky() {
-  const createLight = (
-    color: Color3,
-    position: Vector3,
-    name = "defaultLight"
-  ) => {
+  const createLight = (color: Color3, position: Vector3, name = "defaultLight") => {
     const light2 = new PointLight(name, position, Engine.LastCreatedScene!);
     light2.diffuse = color;
     light2.specular = color;
@@ -99,14 +88,6 @@ function createSky() {
     left: "#F28A2F",
     right: "#45699C",
   };
-  createLight(
-    Color3.FromHexString(set_Orange.right),
-    new Vector3(5, 4, 2),
-    "dark"
-  ).parent = root;
-  createLight(
-    Color3.FromHexString(set_Orange.left),
-    new Vector3(-5, 0, 2),
-    "red"
-  ).parent = root;
+  createLight(Color3.FromHexString(set_Orange.right), new Vector3(5, 4, 2), "dark").parent = root;
+  createLight(Color3.FromHexString(set_Orange.left), new Vector3(-5, 0, 2), "red").parent = root;
 }
