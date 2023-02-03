@@ -1,4 +1,4 @@
-import { Camera, Engine, Mesh, TransformNode, Vector3 } from "@babylonjs/core";
+import { Camera, Engine, Mesh, PointLight, TransformNode, Vector3 } from "@babylonjs/core";
 import { animateTo, animateToVector } from "./animations";
 
 const REGULAR_ZOOM = -12;
@@ -7,9 +7,15 @@ const CLOSE_UP = -5;
 export class CameraConrtoller {
   cameraContainer: TransformNode;
   target?: Mesh;
+  light: PointLight;
   constructor(camera: Camera) {
     this.cameraContainer = new TransformNode("cameraNode");
+    this.light = new PointLight("cameraPointLight", new Vector3(0, 0, 2), Engine.LastCreatedScene!);
+    this.light.radius = 1;
+    this.light.range = 5;
+    this.light.intensity = 2;
 
+    this.light.parent = this.cameraContainer;
     camera.parent = this.cameraContainer;
     this.cameraContainer.position.set(0, 0.1, REGULAR_ZOOM);
     Engine.LastCreatedScene?.onBeforeRenderObservable.add(() => {
