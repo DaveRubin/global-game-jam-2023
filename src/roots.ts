@@ -9,6 +9,8 @@ import { SingleRoot } from "./singleRoot";
 
 export class Roots {
   scene: Scene;
+  waterPools: Mesh[];
+  waterConsumed = 0;
   isDragging = false;
   timer?: NodeJS.Timer;
   currentMousePosition = Vector3.Zero();
@@ -20,7 +22,7 @@ export class Roots {
 
   baseRoot: Mesh;
 
-  constructor(scene: Scene) {
+  constructor(scene: Scene, waterPools: Mesh[]) {
     this.scene = scene;
     this.baseRoot = MeshBuilder.CreateBox(
       "baseRoot",
@@ -28,6 +30,7 @@ export class Roots {
       this.scene
     );
     this.baseRoot.position.y = -0.2;
+    this.waterPools = waterPools;
   }
 
   getIsDragging() {
@@ -78,26 +81,36 @@ export class Roots {
   }
 
   moveSphere() {
-    if (this.isDragging) {
-      const direction = this.currentMousePosition.subtract(
-        this.sphere.position
-      );
-      const distance = direction.length();
-      direction.normalize();
+    const direction = this.currentMousePosition.subtract(this.sphere.position);
+    const distance = direction.length();
+    direction.normalize();
 
-      // Move the sphere in the direction of the mouse with speed 1
-      if (distance > 0.1) {
-        this.sphere?.moveWithCollisions(
-          new Vector3(
-            direction.x * this.rootSpeed,
-            direction.y * this.rootSpeed,
-            0
-          )
-        );
-        this.roots[this.currentRoot].update([
-          ...this.rootsPoints[this.currentRoot],
-          this.sphere.position,
-        ]);
+    // Move the sphere in the direction of the mouse with speed 1
+    if (distance > 0.1) {
+      this.sphere?.moveWithCollisions(
+        new Vector3(
+          direction.x * this.rootSpeed,
+          direction.y * this.rootSpeed,
+          0
+        )
+      );
+      this.roots[this.currentRoot].update([
+        ...this.rootsPoints[this.currentRoot],
+        this.sphere.position,
+      ]);
+      this.checkIfRootConsumesWater(this.roots[this.currentRoot]);
+    }
+  }
+
+  checkIfRootConsumesWater(root: SingleRoot) {
+    for (let i = 0; i < this.waterPools.length; i++) {
+      const mesh = this.waterPools[i];
+
+      if (root.tube.intersectsMesh(mesh)) {
+        this.waterConsumed++; // Increment the counter
+
+        this.waterPools.splice(i, 1);
+        i--; // Decrement the index so that we don't skip the next mesh in the array
       }
     }
   }

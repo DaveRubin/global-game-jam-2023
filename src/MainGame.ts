@@ -1,5 +1,5 @@
 const INITIAL_ENERGY = 1000;
-const ENERGY_USAGE = 0.1;
+const ENERGY_USAGE = 5;
 const INITIAL_ENERGY_PER_TICK = 2;
 
 export class MainGame {
@@ -26,4 +26,8 @@ export class MainGame {
       this.currentEnergy = 0;
     }
   };
+
+  updateEnergyPerTick(energyPerTick) {
+    this.energyPerTick = INITIAL_ENERGY_PER_TICK + energyPerTick;
+  }
 }

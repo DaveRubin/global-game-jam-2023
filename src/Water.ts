@@ -6,7 +6,6 @@ import {
   StandardMaterial,
   TransformNode,
   Vector3,
-  Animation,
 } from "@babylonjs/core";
 import { animateTo, animateToVector } from "./animations";
 
@@ -20,9 +19,17 @@ export class Water {
     this.mesh = MeshBuilder.CreateSphere("water", { diameter: 1, segments: 4 });
     this.mesh.material = this.getMaterial();
     this.mesh.overlayAlpha = 0.5;
-    this.mesh.scaling = new Vector3(Math.random() * 0.3 + 0.5, Math.random() * 0.3 + 0.5, 0.2);
+    this.mesh.scaling = new Vector3(
+      Math.random() * 0.3 + 0.5,
+      Math.random() * 0.3 + 0.5,
+      0.2
+    );
     const scale1 = Vector3.One();
-    const scale2 = new Vector3(Math.random() * 0.4 + 0.8, Math.random() * 0.4 + 0.8, 1);
+    const scale2 = new Vector3(
+      Math.random() * 0.4 + 0.8,
+      Math.random() * 0.4 + 0.8,
+      1
+    );
     this.mesh.parent = animation;
     animation.parent = this.transform;
     this.transform.scaling = new Vector3(1.5, 1, 1);
