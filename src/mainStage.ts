@@ -136,11 +136,12 @@ function createRocks() {
 }
 
 function createWater() {
+  const startingWater = new Water();
+  startingWater.transform.position = new Vector3(0.5, -1.3, 0);
   const maxX = 15;
   const maxY = 70;
   const yRanges = [
     [maxY - 1, 1],
-    [maxY - 2, 2],
     [maxY - 3, 3],
     [maxY - 5, 5],
     [maxY - 15, 10],
