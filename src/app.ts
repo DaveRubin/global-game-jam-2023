@@ -1,10 +1,4 @@
-import {
-  Engine,
-  FreeCamera,
-  HemisphericLight,
-  Scene,
-  Vector3,
-} from "@babylonjs/core";
+import { Engine, FreeCamera, HemisphericLight, Scene, Vector3 } from "@babylonjs/core";
 import "@babylonjs/core/Debug/debugLayer";
 import "@babylonjs/inspector";
 import "@babylonjs/loaders";
@@ -15,6 +9,7 @@ import { MainGame } from "./MainGame";
 import { createMainStage } from "./mainStage";
 import { Rock } from "./rock";
 import { Roots } from "./roots";
+import { SoundMananger } from "./SoundManager";
 
 class App {
   constructor() {
@@ -30,15 +25,12 @@ class App {
 
     const camera = new FreeCamera("camera1", Vector3.Zero(), scene);
     const controller = new CameraConrtoller(camera);
-    var mainLight: HemisphericLight = new HemisphericLight(
-      "light1",
-      new Vector3(0, 1, 1),
-      scene
-    );
+    var mainLight: HemisphericLight = new HemisphericLight("light1", new Vector3(0, 1, 1), scene);
     mainLight.intensity = 0.2;
     const game = new MainGame();
     const mainGui = new MainGUI();
     mainGui.progress = game.energyRatio;
+    const soundManage = new SoundMananger();
     // animateFloat(mainGui, "progress", 4, [0, 1]).then(() => console.log("DONE!"));
     const dirt = createMainStage();
     scene.registerBeforeRender(() => {
@@ -82,15 +74,9 @@ class App {
     new Rock(new Vector3(-3.1, -6.1, 0));
 
     canvas.addEventListener("pointerdown", (event) => {
-      const pickRoots = scene.pick(event.clientX, event.clientY, (mesh) =>
-        roots.isMeshInRoots(mesh)
-      );
+      const pickRoots = scene.pick(event.clientX, event.clientY, (mesh) => roots.isMeshInRoots(mesh));
       if (pickRoots.hit) {
-        const pickDirt = scene.pick(
-          event.clientX,
-          event.clientY,
-          (mesh) => mesh === dirt
-        );
+        const pickDirt = scene.pick(event.clientX, event.clientY, (mesh) => mesh === dirt);
 
         if (pickDirt.hit) {
           const target = pickDirt.pickedPoint;
@@ -98,12 +84,14 @@ class App {
           const sph = roots.createSphere(target!);
           controller.startFollow(sph);
           roots.updateMousePosition(target!);
+          soundManage.startDig();
           roots.addRoot();
           roots.addTime();
         }
       }
     });
     const finishFollow = () => {
+      soundManage.stopDig();
       roots.deleteSphere();
       controller.stopFollow();
     };
