@@ -7,6 +7,7 @@ import { CameraConrtoller } from "./CameraController";
 import { MainGUI } from "./gui";
 import { MainGame } from "./MainGame";
 import { createMainStage } from "./mainStage";
+import { Rock } from "./rock";
 import { Roots } from "./roots";
 import { SoundMananger } from "./SoundManager";
 
@@ -61,6 +62,16 @@ class App {
     });
 
     const roots = new Roots(scene);
+    new Rock(new Vector3(-2, -2, 0));
+    new Rock(new Vector3(-4, -2.5, 0));
+    new Rock(new Vector3(1, -2.7, 0));
+    new Rock(new Vector3(3, -3, 0));
+    new Rock(new Vector3(6, -4.1, 0));
+    new Rock(new Vector3(1.1, -6.1, 0));
+    new Rock(new Vector3(5, -6.6, 0));
+    new Rock(new Vector3(5.3, -7.1, 0));
+    new Rock(new Vector3(-6.4, -8.1, 0));
+    new Rock(new Vector3(-3.1, -6.1, 0));
 
     canvas.addEventListener("pointerdown", (event) => {
       const pickRoots = scene.pick(event.clientX, event.clientY, (mesh) => roots.isMeshInRoots(mesh));
