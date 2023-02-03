@@ -6,7 +6,7 @@
   "author": "David Rubin <dudrubin@gmail.com>",
   "license": "MIT",
   "scripts": {
-    "build": "webpack",
+    "build": "vite build",
     "start": "webpack-dev-server --port 8080",
     "dev": "vite"
   },
