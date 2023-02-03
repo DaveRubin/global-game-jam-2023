@@ -1,10 +1,4 @@
-import {
-  Engine,
-  FreeCamera,
-  HemisphericLight,
-  Scene,
-  Vector3,
-} from "@babylonjs/core";
+import { Engine, FreeCamera, HemisphericLight, Scene, Vector3 } from "@babylonjs/core";
 import "@babylonjs/core/Debug/debugLayer";
 import "@babylonjs/inspector";
 import "@babylonjs/loaders";
@@ -57,8 +51,13 @@ class App {
     //     animateTo(CoT, "position.y", 1, [CoT.position.y, p.y]);
     //   }
     // };
-
+    const keysState = { shiftPressed: false };
     // hide/show the Inspector
+    window.addEventListener("keyup", (ev) => {
+      if (!ev.shiftKey && keysState.shiftPressed) {
+        keysState.shiftPressed = false;
+      }
+    });
     window.addEventListener("keydown", (ev) => {
       // Shift+Ctrl+Alt+I
       if (ev.key === "i") {
@@ -69,29 +68,31 @@ class App {
           scene.debugLayer.show();
         }
       }
+      if (ev.shiftKey) {
+        keysState.shiftPressed = true;
+      }
     });
 
     const roots = new Roots(scene, waterPools);
 
     canvas.addEventListener("pointerdown", (event) => {
-      const pickRoots = scene.pick(event.clientX, event.clientY, (mesh) =>
-        roots.isMeshInRoots(mesh)
-      );
+      const pickRoots = scene.pick(event.clientX, event.clientY, (mesh) => roots.isMeshInRoots(mesh));
       if (pickRoots.hit) {
-        const pickDirt = scene.pick(
-          event.clientX,
-          event.clientY,
-          (mesh) => mesh === dirt
-        );
-        if (pickDirt.hit) {
+        const pickDirt = scene.pick(event.clientX, event.clientY, (mesh) => mesh === dirt);
+
+        if (pickDirt.hit && pickDirt.pickedPoint) {
           const target = pickDirt.pickedPoint;
-          target!.z = 0;
-          const sph = roots.createSphere(target!);
-          controller.startFollow(sph);
-          roots.updateMousePosition(target!);
-          soundManage.startDig();
-          roots.addRoot();
-          roots.addTime();
+          if (!keysState.shiftPressed) {
+            target.z = 0;
+            const sph = roots.createSphere(target);
+            controller.startFollow(sph);
+            roots.updateMousePosition(target);
+            soundManage.startDig();
+            roots.addRoot();
+            roots.addTime();
+          } else {
+            controller.goTo(target);
+          }
         }
       }
     });
