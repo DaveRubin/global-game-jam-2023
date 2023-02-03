@@ -1,5 +1,5 @@
 const INITIAL_ENERGY = 1000;
-const ENERGY_USAGE = 5;
+const ENERGY_USAGE = 0.1;
 const INITIAL_ENERGY_PER_TICK = 2;
 
 export class MainGame {
