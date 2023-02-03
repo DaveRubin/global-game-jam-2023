@@ -1,5 +1,17 @@
-import { Camera, Engine, Mesh, Nullable, PointLight, TransformNode, Vector3 } from "@babylonjs/core";
+import {
+  Camera,
+  Color3,
+  Engine,
+  Mesh,
+  MeshBuilder,
+  Nullable,
+  PointLight,
+  Texture,
+  TransformNode,
+  Vector3,
+} from "@babylonjs/core";
 import { animateTo, animateToVector } from "./animations";
+import { createMaterial } from "./materials";
 
 const REGULAR_ZOOM = -12;
 const CLOSE_UP = -5;
@@ -30,6 +42,19 @@ export class CameraConrtoller {
         this.cameraContainer.position.y += diff.y / 4;
       }
     });
+    const size = 20;
+    const sky = MeshBuilder.CreatePlane("sky", {
+      width: size,
+      height: size,
+    });
+    const m = createMaterial(Color3.White(), "skyMaterial");
+    m.diffuseTexture = new Texture("./textures/gradient.png");
+    m.specularColor = Color3.Black();
+    m.emissiveColor = Color3.White();
+    sky.material = m;
+    sky.position.z = 20;
+    sky.scaling.x = 2;
+    sky.parent = this.cameraContainer;
   }
   startFollow = (target: Mesh) => {
     this.target = target;

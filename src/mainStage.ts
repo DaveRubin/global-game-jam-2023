@@ -11,7 +11,6 @@ const groundDepth = 1;
 
 export function createMainStage() {
   createGround();
-  createSky();
   createRocks();
   const waterPools = createWater();
   new Plant();
@@ -54,46 +53,6 @@ function createUnderground() {
   light.parent = root;
   dirt.parent = root;
   return dirt;
-}
-
-function createSky() {
-  const createLight = (color: Color3, position: Vector3, name = "defaultLight") => {
-    const light2 = new PointLight(name, position, Engine.LastCreatedScene!);
-    light2.diffuse = color;
-    light2.specular = color;
-    light2.radius = 50;
-    light2.range = 50;
-    light2.intensity = 1;
-    return light2;
-  };
-
-  const root = new TransformNode("sky");
-  const sky = MeshBuilder.CreatePlane("sky", {
-    width: groundWidth,
-    height: groundWidth,
-  });
-  const m = createMaterial(new Color3(1, 1, 1), "skyMaterial");
-  m.diffuseTexture = new Texture("./textures/gradient.png");
-  m.specularColor = Color3.Black();
-  m.emissiveColor = Color3.White();
-  sky.material = m;
-  sky.position.y = groundWidth / 2;
-  sky.position.z = 6;
-  sky.parent = root;
-  // const set_Bright = {
-  //   left: "#84FFF4",
-  //   right: "#5785A6",
-  // };
-  // const set_RedBlue = {
-  //   left: "#ff0000",
-  //   right: "#28335F",
-  // };
-  // const set_Orange = {
-  //   left: "#F28A2F",
-  //   right: "#45699C",
-  // };
-  // createLight(Color3.FromHexString(set_Orange.right), new Vector3(5, 4, 2), "dark").parent = root;
-  // createLight(Color3.FromHexString(set_Orange.left), new Vector3(-5, 0, 2), "red").parent = root;
 }
 
 function createRocks() {

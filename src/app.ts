@@ -98,8 +98,10 @@ class App {
           return mesh === dirt;
         });
         let target = pickResult.pickedPoint;
-        target!.z = 0;
-        roots.updateMousePosition(target!);
+        if (target) {
+          target.z = 0;
+          roots.updateMousePosition(target);
+        }
       } else if (game.currentEnergy <= 0) {
         finishFollow();
       }
