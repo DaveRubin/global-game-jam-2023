@@ -60,11 +60,13 @@ export class Roots {
   createSphere(position: Vector3) {
     this.sphere = MeshBuilder.CreateSphere(
       "sphere",
-      { diameter: 0.7 },
+      { diameter: 0.2 },
       this.scene
     );
     this.sphere.visibility = 0;
     this.sphere.position = position;
+    this.sphere.checkCollisions = true;
+    this.sphere.ellipsoid = new Vector3(0.08, 0.08, 0.08);
     this.isDragging = true;
     return this.sphere;
   }
