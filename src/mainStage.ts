@@ -41,11 +41,11 @@ function createGround() {
 function createUnderground() {
   const root = new TransformNode("underground");
   const dirt = MeshBuilder.CreatePlane("dirt", {
-    width: groundWidth,
-    height: groundWidth,
+    width: skyHeight,
+    height: skyHeight,
   });
   dirt.material = createUndergroundMaterial();
-  dirt.position.y = -groundWidth / 2;
+  dirt.position.y = -skyHeight / 2;
   dirt.position.z = -0;
   const light = new PointLight("point", new Vector3(0, 0, -0.5), Engine.LastCreatedScene!);
   light.radius = 1;
@@ -142,6 +142,5 @@ function createWater() {
     waterPools.push(w.mesh);
     w.transform.position = new Vector3(x, -y, 0);
   }
-
   return waterPools;
 }
