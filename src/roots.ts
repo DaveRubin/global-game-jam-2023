@@ -19,6 +19,7 @@ export class Roots {
   roots: SingleRoot[] = [];
   sphere!: Mesh;
   rootSpeed = 0.015;
+  touchedWater: boolean = false;
 
   baseRoot: Mesh;
 
@@ -77,6 +78,7 @@ export class Roots {
   deleteSphere() {
     this.sphere.dispose();
     clearInterval(this.timer);
+    this.touchedWater = false;
     this.isDragging = false;
   }
 
@@ -107,6 +109,7 @@ export class Roots {
       const mesh = this.waterPools[i];
 
       if (root.tube.intersectsMesh(mesh)) {
+        this.touchedWater = true;
         this.waterConsumed++; // Increment the counter
 
         this.waterPools.splice(i, 1);
