@@ -19,12 +19,8 @@ export const createMainStage = () => {
   createGround();
   createSky();
   createRocks();
+  createWater();
   new Plant();
-  const w = new Water();
-  w.transform.position = new Vector3(0, -2, 0);
-  const w1 = new Water();
-  w1.transform.position = new Vector3(0.1, -2.1, 0);
-  w.consumed();
   return createUnderground();
 };
 
@@ -122,20 +118,45 @@ function createSky() {
 function createRocks() {
   const maxX = 15;
   const maxY = 70;
+  const yRanges = [
+    [5, maxY - 5],
+    [15, maxY - 15],
+    [30, maxY - 30],
+    [40, maxY - 40],
+    [50, maxY - 50],
+  ];
+
   for (let i = 0; i < 400; i++) {
-    const x = Math.floor(Math.random() * (maxX * 2 + 1)) - 15;
-    let y;
-    if (i < 80) {
-      y = Math.floor(Math.random() * (maxY - 5 + 1)) + 5;
-    } else if (i < 120) {
-      y = Math.floor(Math.random() * (maxY - 15 + 1)) + 15;
-    } else if (i < 220) {
-      y = Math.floor(Math.random() * (maxY - 30 + 1)) + 30;
-    } else if (i < 300) {
-      y = Math.floor(Math.random() * (maxY - 40 + 1)) + 40;
-    } else {
-      y = Math.floor(Math.random() * (maxY - 50 + 1)) + 50;
-    }
+    const x = Math.floor(Math.random() * (maxX * 2 + 1)) - maxX;
+    const yRange = yRanges[i % yRanges.length];
+    const y =
+      Math.floor(Math.random() * (yRange[1] - yRange[0] + 1)) + yRange[0];
     new Rock(new Vector3(x, -y, 0));
+  }
+}
+
+function createWater() {
+  const maxX = 15;
+  const maxY = 70;
+  const yRanges = [
+    [maxY - 1, 1],
+    [maxY - 2, 2],
+    [maxY - 3, 3],
+    [maxY - 5, 5],
+    [maxY - 15, 10],
+    [maxY - 25, 20],
+    [maxY - 35, 30],
+    [maxY - 45, 40],
+    [maxY - 55, 50],
+    [maxY - 60, 60],
+  ];
+
+  for (let i = 0; i < 50; i++) {
+    const x = Math.floor(Math.random() * (maxX * 2 + 1)) - maxX;
+    const yRange = yRanges[i % yRanges.length];
+    const y =
+      Math.floor(Math.random() * (yRange[0] - yRange[1] + 1)) + yRange[1];
+    const w = new Water();
+    w.transform.position = new Vector3(x, -y, 0);
   }
 }
