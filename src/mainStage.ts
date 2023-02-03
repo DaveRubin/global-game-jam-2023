@@ -139,7 +139,7 @@ function createRocks() {
 function createWater() {
   const waterPools = [];
   const startingWater = new Water();
-  waterPools.push(startingWater.mesh);
+  waterPools.push(startingWater.waterCollider);
   startingWater.transform.position = new Vector3(0.5, -1.3, 0);
   const maxX = 15;
   const maxY = 70;
@@ -161,7 +161,7 @@ function createWater() {
     const y =
       Math.floor(Math.random() * (yRange[0] - yRange[1] + 1)) + yRange[1];
     const w = new Water();
-    waterPools.push(w.mesh);
+    waterPools.push(w.waterCollider);
     w.transform.position = new Vector3(x, -y, 0);
   }
 

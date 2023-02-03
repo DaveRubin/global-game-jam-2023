@@ -121,6 +121,9 @@ class App {
     });
 
     scene.registerBeforeRender(() => {
+      if (roots.touchedWater) {
+        finishFollow();
+      }
       if (roots.getIsDragging()) {
         roots.moveSphere();
         game.updateEnergyPerTick(roots.waterConsumed);
