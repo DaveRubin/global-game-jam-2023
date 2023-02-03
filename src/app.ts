@@ -1,4 +1,10 @@
-import { Engine, FreeCamera, HemisphericLight, Scene, Vector3 } from "@babylonjs/core";
+import {
+  Engine,
+  FreeCamera,
+  HemisphericLight,
+  Scene,
+  Vector3,
+} from "@babylonjs/core";
 import "@babylonjs/core/Debug/debugLayer";
 import "@babylonjs/inspector";
 import "@babylonjs/loaders";
@@ -68,9 +74,15 @@ class App {
     const roots = new Roots(scene, waterPools);
 
     canvas.addEventListener("pointerdown", (event) => {
-      const pickRoots = scene.pick(event.clientX, event.clientY, (mesh) => roots.isMeshInRoots(mesh));
+      const pickRoots = scene.pick(event.clientX, event.clientY, (mesh) =>
+        roots.isMeshInRoots(mesh)
+      );
       if (pickRoots.hit) {
-        const pickDirt = scene.pick(event.clientX, event.clientY, (mesh) => mesh === dirt);
+        const pickDirt = scene.pick(
+          event.clientX,
+          event.clientY,
+          (mesh) => mesh === dirt
+        );
         if (pickDirt.hit) {
           const target = pickDirt.pickedPoint;
           target!.z = 0;
@@ -97,7 +109,6 @@ class App {
         let target = pickResult.pickedPoint;
         target!.z = 0;
         roots.updateMousePosition(target!);
-        game.useEnergy();
       } else if (game.currentEnergy <= 0) {
         finishFollow();
       }
@@ -110,14 +121,18 @@ class App {
     });
 
     scene.registerBeforeRender(() => {
-      roots.moveSphere();
-      game.updateEnergyPerTick(roots.waterConsumed);
+      if (roots.getIsDragging()) {
+        roots.moveSphere();
+        game.updateEnergyPerTick(roots.waterConsumed);
+      }
     });
 
     // run the main render loop
     engine.runRenderLoop(() => {
       if (!roots.getIsDragging()) {
         game.updateEnergy();
+      } else {
+        game.useEnergy();
       }
 
       mainGui.progress = game.energyRatio;

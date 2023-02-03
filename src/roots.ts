@@ -81,28 +81,24 @@ export class Roots {
   }
 
   moveSphere() {
-    if (this.isDragging) {
-      const direction = this.currentMousePosition.subtract(
-        this.sphere.position
-      );
-      const distance = direction.length();
-      direction.normalize();
+    const direction = this.currentMousePosition.subtract(this.sphere.position);
+    const distance = direction.length();
+    direction.normalize();
 
-      // Move the sphere in the direction of the mouse with speed 1
-      if (distance > 0.1) {
-        this.sphere?.moveWithCollisions(
-          new Vector3(
-            direction.x * this.rootSpeed,
-            direction.y * this.rootSpeed,
-            0
-          )
-        );
-        this.roots[this.currentRoot].update([
-          ...this.rootsPoints[this.currentRoot],
-          this.sphere.position,
-        ]);
-        this.checkIfRootConsumesWater(this.roots[this.currentRoot]);
-      }
+    // Move the sphere in the direction of the mouse with speed 1
+    if (distance > 0.1) {
+      this.sphere?.moveWithCollisions(
+        new Vector3(
+          direction.x * this.rootSpeed,
+          direction.y * this.rootSpeed,
+          0
+        )
+      );
+      this.roots[this.currentRoot].update([
+        ...this.rootsPoints[this.currentRoot],
+        this.sphere.position,
+      ]);
+      this.checkIfRootConsumesWater(this.roots[this.currentRoot]);
     }
   }
 
