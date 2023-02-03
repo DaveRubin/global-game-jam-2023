@@ -1,5 +1,6 @@
 import { Engine, FreeCamera, HemisphericLight, Scene, Vector3 } from "@babylonjs/core";
 import "@babylonjs/core/Debug/debugLayer";
+import { clipPlaneFragment } from "@babylonjs/core/Shaders/ShadersInclude/clipPlaneFragment";
 import "@babylonjs/inspector";
 import "@babylonjs/loaders";
 import "@babylonjs/loaders/glTF";
@@ -10,6 +11,7 @@ import { MainGame } from "./MainGame";
 import { createMainStage } from "./mainStage";
 import { Roots } from "./roots";
 import { SoundMananger } from "./SoundManager";
+import { TutorialHand } from "./TutorialHand";
 
 class App {
   constructor() {
@@ -35,22 +37,10 @@ class App {
     const mainGui = new MainGUI();
     mainGui.progress = game.energyRatio;
     const soundManage = new SoundMananger();
-    // animateFloat(mainGui, "progress", 4, [0, 1]).then(() => console.log("DONE!"));
     const { dirt, waterPools } = createMainStage();
-    scene.registerBeforeRender(() => {
-      // leaf.addRotation(0, 0.05, 0);
-    });
-    // scene.onPointerDown = function castRay() {
-    //   var ray = scene.createPickingRay(scene.pointerX, scene.pointerY, Matrix.Identity(), camera, false);
+    const tutorial = new TutorialHand();
+    tutorial.showDrag(Vector3.Zero(), new Vector3(0.5, -1.4));
 
-    //   var hit = scene.pickWithRay(ray);
-
-    //   if (hit?.pickedMesh?.id === "plantBase") {
-    //     const p = hit?.pickedMesh?.position;
-    //     animateTo(CoT, "position.x", 1, [CoT.position.x, p.x]);
-    //     animateTo(CoT, "position.y", 1, [CoT.position.y, p.y]);
-    //   }
-    // };
     const keysState = { shiftPressed: false };
     // hide/show the Inspector
     window.addEventListener("keyup", (ev) => {
@@ -123,6 +113,10 @@ class App {
 
     scene.registerBeforeRender(() => {
       if (roots.touchedWater) {
+        // console.log("aaaaaa", tutorial.isTutorial);
+        if (tutorial.isTutorial) {
+          tutorial.stopDrag();
+        }
         finishFollow();
       }
       if (roots.getIsDragging()) {
