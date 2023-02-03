@@ -26,4 +26,8 @@ export class MainGame {
       this.currentEnergy = 0;
     }
   };
+
+  updateEnergyPerTick(energyPerTick) {
+    this.energyPerTick = INITIAL_ENERGY_PER_TICK + energyPerTick;
+  }
 }

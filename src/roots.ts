@@ -9,6 +9,8 @@ import { SingleRoot } from "./singleRoot";
 
 export class Roots {
   scene: Scene;
+  waterPools: Mesh[];
+  waterConsumed = 0;
   isDragging = false;
   timer?: NodeJS.Timer;
   currentMousePosition = Vector3.Zero();
@@ -20,7 +22,7 @@ export class Roots {
 
   baseRoot: Mesh;
 
-  constructor(scene: Scene) {
+  constructor(scene: Scene, waterPools: Mesh[]) {
     this.scene = scene;
     this.baseRoot = MeshBuilder.CreateBox(
       "baseRoot",
@@ -28,6 +30,7 @@ export class Roots {
       this.scene
     );
     this.baseRoot.position.y = -0.2;
+    this.waterPools = waterPools;
   }
 
   getIsDragging() {
@@ -98,6 +101,20 @@ export class Roots {
           ...this.rootsPoints[this.currentRoot],
           this.sphere.position,
         ]);
+        this.checkIfRootConsumesWater(this.roots[this.currentRoot]);
+      }
+    }
+  }
+
+  checkIfRootConsumesWater(root: SingleRoot) {
+    for (let i = 0; i < this.waterPools.length; i++) {
+      const mesh = this.waterPools[i];
+
+      if (root.tube.intersectsMesh(mesh)) {
+        this.waterConsumed++; // Increment the counter
+
+        this.waterPools.splice(i, 1);
+        i--; // Decrement the index so that we don't skip the next mesh in the array
       }
     }
   }

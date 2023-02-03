@@ -15,14 +15,15 @@ import { Water } from "./Water";
 const groundWidth = 100;
 const groundDepth = 1;
 
-export const createMainStage = () => {
+export function createMainStage() {
   createGround();
   createSky();
   createRocks();
-  createWater();
+  const waterPools = createWater();
   new Plant();
-  return createUnderground();
-};
+  const dirt = createUnderground();
+  return { waterPools, dirt };
+}
 
 function createGround() {
   const root = new TransformNode("ground");
@@ -136,7 +137,9 @@ function createRocks() {
 }
 
 function createWater() {
+  const waterPools = [];
   const startingWater = new Water();
+  waterPools.push(startingWater.mesh);
   startingWater.transform.position = new Vector3(0.5, -1.3, 0);
   const maxX = 15;
   const maxY = 70;
@@ -158,6 +161,9 @@ function createWater() {
     const y =
       Math.floor(Math.random() * (yRange[0] - yRange[1] + 1)) + yRange[1];
     const w = new Water();
+    waterPools.push(w.mesh);
     w.transform.position = new Vector3(x, -y, 0);
   }
+
+  return waterPools;
 }

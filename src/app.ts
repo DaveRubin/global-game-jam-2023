@@ -41,7 +41,7 @@ class App {
     mainGui.progress = game.energyRatio;
     const soundManage = new SoundMananger();
     // animateFloat(mainGui, "progress", 4, [0, 1]).then(() => console.log("DONE!"));
-    const dirt = createMainStage();
+    const { dirt, waterPools } = createMainStage();
     scene.registerBeforeRender(() => {
       // leaf.addRotation(0, 0.05, 0);
     });
@@ -70,7 +70,7 @@ class App {
       }
     });
 
-    const roots = new Roots(scene);
+    const roots = new Roots(scene, waterPools);
 
     canvas.addEventListener("pointerdown", (event) => {
       const pickRoots = scene.pick(event.clientX, event.clientY, (mesh) =>
@@ -122,6 +122,7 @@ class App {
 
     scene.registerBeforeRender(() => {
       roots.moveSphere();
+      game.updateEnergyPerTick(roots.waterConsumed);
     });
 
     // run the main render loop
