@@ -1,9 +1,14 @@
-import { Engine, FreeCamera, HemisphericLight, Matrix, Scene, TransformNode, Vector3 } from "@babylonjs/core";
+import {
+  Engine,
+  FreeCamera,
+  HemisphericLight,
+  Scene,
+  Vector3,
+} from "@babylonjs/core";
 import "@babylonjs/core/Debug/debugLayer";
 import "@babylonjs/inspector";
 import "@babylonjs/loaders";
 import "@babylonjs/loaders/glTF";
-import { animateTo } from "./animations";
 import { CameraConrtoller } from "./CameraController";
 import { MainGUI } from "./gui";
 import { MainGame } from "./MainGame";
@@ -24,7 +29,11 @@ class App {
 
     const camera = new FreeCamera("camera1", Vector3.Zero(), scene);
     const controller = new CameraConrtoller(camera);
-    var mainLight: HemisphericLight = new HemisphericLight("light1", new Vector3(0, 1, 1), scene);
+    var mainLight: HemisphericLight = new HemisphericLight(
+      "light1",
+      new Vector3(0, 1, 1),
+      scene
+    );
     mainLight.intensity = 0.2;
     const game = new MainGame();
     const mainGui = new MainGUI();
@@ -62,9 +71,15 @@ class App {
     const roots = new Roots(scene);
 
     canvas.addEventListener("pointerdown", (event) => {
-      const pickRoots = scene.pick(event.clientX, event.clientY, (mesh) => roots.isMeshInRoots(mesh));
+      const pickRoots = scene.pick(event.clientX, event.clientY, (mesh) =>
+        roots.isMeshInRoots(mesh)
+      );
       if (pickRoots.hit) {
-        const pickDirt = scene.pick(event.clientX, event.clientY, (mesh) => mesh === dirt);
+        const pickDirt = scene.pick(
+          event.clientX,
+          event.clientY,
+          (mesh) => mesh === dirt
+        );
 
         if (pickDirt.hit) {
           const target = pickDirt.pickedPoint;
