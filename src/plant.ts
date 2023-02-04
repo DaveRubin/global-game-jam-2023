@@ -10,29 +10,33 @@ import {
   Vector3,
   VertexBuffer,
 } from "@babylonjs/core";
-import { animateToVector } from "./animations";
+import { animateTo, animateToVector } from "./animations";
 import { DEGREE } from "./consts";
+import { Leaf } from "./Leaf";
 import { createMaterial } from "./materials";
+import { getRandomRangeDegree } from "./util";
 
 export class Plant {
   leavesCreated = 0;
   material: StandardMaterial;
   root: TransformNode;
   pairs: TransformNode[];
+  leaves: Leaf[];
   static instance: Plant;
   particle: ParticleSystem;
 
   constructor() {
+    this.leaves = [];
     this.root = new TransformNode("plant");
     this.material = this.getPlantMaterial();
     const base = this.getPlantBase();
     this.pairs = [];
     this.particle = this.initParticles();
-    this.addPairOfLeaves(-90);
     base.position.set(0, -0.2, 0);
 
     base.parent = this.root;
     Plant.instance = this;
+    this.addPairOfLeaves(-90);
   }
 
   initParticles = () => {
@@ -49,33 +53,25 @@ export class Plant {
   };
   addPairOfLeaves = (baseRotation: number) => {
     const pair = new TransformNode("pairOfLeaves");
-    const small = this.createLeaf();
-    const big = this.createLeaf();
+    const small = new Leaf();
+    const big = new Leaf();
     this.particleBurst();
 
-    big.rotation.set(15 * DEGREE, (180 + baseRotation) * DEGREE, 0);
-    small.rotation.set(15 * DEGREE, baseRotation * DEGREE, 0);
+    big.node.rotation.set(15 * DEGREE, (180 + baseRotation) * DEGREE, 0);
+    small.node.rotation.set(15 * DEGREE, baseRotation * DEGREE, 0);
     const smallSize = 0.25 + Math.random() / 10;
     const bigSize = 0.3 + Math.random() / 5;
-    small.scaling.set(0, 0, 0);
-    big.scaling.set(0, 0, 0);
-    animateToVector(big, "scaling", 2, [Vector3.Zero(), new Vector3(bigSize, bigSize, bigSize)]);
-    const anim = animateToVector(small, "scaling", 2, [
-      Vector3.Zero(),
-      new Vector3(smallSize, smallSize, smallSize),
-    ]);
-
-    small.parent = pair;
-    big.parent = pair;
-    this.pairs.forEach((p, i) => {
-      const scale = 1.2;
-      p.getChildTransformNodes().forEach((c) => {
-        animateToVector(c, "scaling", 2, [c.scaling, c.scaling.multiplyByFloats(scale, scale, scale)]);
-        animateToVector(c, "rotation", 2, [c.rotation, c.rotation.multiplyByFloats(scale, scale, 1)]);
-      });
-    });
-    this.particleBurst();
+    big.node.scaling.setAll(bigSize);
+    small.node.scaling.setAll(smallSize);
+    small.node.parent = pair;
+    big.node.parent = pair;
+    let anim: Promise<any> = new Promise((a) => {});
     this.pairs.push(pair);
+    this.pairs.forEach((p, i) => {
+      const prev = p.rotation.y;
+      anim = animateTo(p, "rotation.y", 2, [prev, prev + getRandomRangeDegree(10, 20)]);
+    });
+    this.leaves.push(big, small);
     return anim;
   };
 
