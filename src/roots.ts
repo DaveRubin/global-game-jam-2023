@@ -87,7 +87,6 @@ export class Roots {
     const direction = this.currentMousePosition.subtract(this.rootTip.position);
     const distance = direction.length();
     direction.normalize();
-
     if (distance > 0.1) {
       this.rootTip?.moveWithCollisions(
         new Vector3(
@@ -100,15 +99,15 @@ export class Roots {
         ...this.rootsPoints[this.currentRoot],
         this.rootTip.position,
       ]);
-      this.checkIfRootConsumesWater(this.roots[this.currentRoot]);
+      this.checkIfRootConsumesWater();
     }
   }
 
-  checkIfRootConsumesWater(root: SingleRoot) {
+  checkIfRootConsumesWater() {
     for (let i = 0; i < this.waterPools.length; i++) {
       const mesh = this.waterPools[i];
 
-      if (root.tube.intersectsMesh(mesh)) {
+      if (this.rootTip.intersectsMesh(mesh)) {
         this.touchedWater = true;
         this.waterConsumed++; // Increment the counter
 
