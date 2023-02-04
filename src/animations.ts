@@ -4,7 +4,7 @@ let runner = 1;
 const ease = new CubicEase();
 ease.setEasingMode(EasingFunction.EASINGMODE_EASEINOUT);
 export const animateTo = (target: any, key: string, duration: number, values: any[], loopMode = false) =>
-  new Promise((resolve) => {
+  new Promise<boolean>((resolve) => {
     const frameRate = 10;
 
     const animation = new Animation(
@@ -37,33 +37,32 @@ export const animateTo = (target: any, key: string, duration: number, values: an
     );
   });
 
-export const animateToVector = (
+export const animateToVector = async (
   target: any,
   key: string,
   duration: number,
   values: Vector3[],
   loopMode = false
-) =>
-  new Promise((resolve) => {
-    animateTo(
-      target,
-      key + ".x",
-      duration,
-      values.map((val) => val.x),
-      loopMode
-    );
-    animateTo(
-      target,
-      key + ".y",
-      duration,
-      values.map((val) => val.y),
-      loopMode
-    );
-    animateTo(
-      target,
-      key + ".z",
-      duration,
-      values.map((val) => val.z),
-      loopMode
-    );
-  });
+) => {
+  animateTo(
+    target,
+    key + ".x",
+    duration,
+    values.map((val) => val.x),
+    loopMode
+  );
+  animateTo(
+    target,
+    key + ".y",
+    duration,
+    values.map((val) => val.y),
+    loopMode
+  );
+  await animateTo(
+    target,
+    key + ".z",
+    duration,
+    values.map((val) => val.z),
+    loopMode
+  );
+};

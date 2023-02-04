@@ -9,9 +9,12 @@ import { DEGREE } from "./consts";
 import { MainGUI } from "./gui";
 import { MainGame } from "./MainGame";
 import { createMainStage } from "./mainStage";
+import { Plant } from "./plant";
 import { Roots } from "./roots";
 import { SoundMananger } from "./SoundManager";
 import { TutorialHand } from "./TutorialHand";
+
+const delay = (time: number) => new Promise((resolve) => setTimeout(resolve, time));
 
 class App {
   constructor() {
@@ -36,12 +39,28 @@ class App {
     const game = new MainGame();
     const mainGui = new MainGUI();
     mainGui.progress = game.energyRatio;
-    const soundManage = new SoundMananger();
+    const sounds = new SoundMananger();
     const { dirt, waterPools } = createMainStage();
     const tutorial = new TutorialHand();
     tutorial.showDrag(Vector3.Zero(), new Vector3(0.5, -1.4));
 
     const keysState = { shiftPressed: false };
+
+    const upgradeSequence = async () => {
+      controller.isUpgrade = true;
+      // go to base
+      await controller.focusOnBase();
+      await delay(300);
+      // play sound
+      sounds.playUpgrade();
+      // add leaf
+      await Plant.instance.addPairOfLeaves(Math.random() * 360);
+      await delay(1500);
+      // increase rate
+      controller.isUpgrade = false;
+      await controller.goToBase();
+    };
+
     // hide/show the Inspector
     window.addEventListener("keyup", (ev) => {
       if (!ev.shiftKey && keysState.shiftPressed) {
@@ -77,17 +96,17 @@ class App {
             const sph = roots.createSphere(target);
             controller.startFollow(sph);
             roots.updateMousePosition(target);
-            soundManage.startDig();
+            sounds.startDig();
             roots.addRoot();
             roots.addTime();
           } else {
-            controller.goTo(target);
+            controller.goTo(target, true);
           }
         }
       }
     });
     const finishFollow = () => {
-      soundManage.stopDig();
+      sounds.stopDig();
       roots.deleteSphere();
       controller.stopFollow();
     };
@@ -119,6 +138,8 @@ class App {
         if (tutorial.isTutorial) {
           tutorial.stopDrag();
         }
+
+        upgradeSequence();
         finishFollow();
       }
       if (roots.getIsDragging()) {

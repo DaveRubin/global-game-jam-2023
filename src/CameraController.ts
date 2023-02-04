@@ -17,12 +17,14 @@ const REGULAR_ZOOM = -12;
 const CLOSE_UP = -5;
 
 const baseLocation = new Vector3(0, 0.1, REGULAR_ZOOM);
+const baseZoomLocation = new Vector3(0, 2, CLOSE_UP);
 
 export class CameraConrtoller {
   cameraContainer: TransformNode;
   target?: Mesh;
   light: PointLight;
   lastExitPoint = baseLocation;
+  isUpgrade: boolean = false;
   constructor(camera: Camera) {
     this.cameraContainer = new TransformNode("cameraNode");
     this.light = new PointLight("cameraPointLight", new Vector3(0, 0, 2), Engine.LastCreatedScene!);
@@ -64,18 +66,29 @@ export class CameraConrtoller {
 
   stopFollow = () => {
     this.target = undefined;
-    animateTo(this.cameraContainer, "position.z", 1, [CLOSE_UP, REGULAR_ZOOM]);
-    animateToVector(this.cameraContainer, "position", 1, [this.cameraContainer.position, this.lastExitPoint]);
+
+    if (!this.isUpgrade) {
+      animateTo(this.cameraContainer, "position.z", 1, [CLOSE_UP, REGULAR_ZOOM]);
+      animateToVector(this.cameraContainer, "position", 1, [
+        this.cameraContainer.position,
+        this.lastExitPoint,
+      ]);
+    }
   };
 
-  goTo(target: Vector3) {
-    animateToVector(this.cameraContainer, "position", 1, [
+  goTo(target: Vector3, zoomOut = false) {
+    return animateToVector(this.cameraContainer, "position", 1, [
       this.cameraContainer.position,
-      new Vector3(target.x, target.y, REGULAR_ZOOM),
+      zoomOut ? new Vector3(target.x, target.y, REGULAR_ZOOM) : target,
     ]);
   }
 
   goToBase() {
-    this.goTo(baseLocation);
+    if (!this.isUpgrade) {
+      return this.goTo(baseLocation);
+    }
+  }
+  focusOnBase() {
+    return this.goTo(baseZoomLocation);
   }
 }

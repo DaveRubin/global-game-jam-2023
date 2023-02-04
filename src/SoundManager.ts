@@ -9,9 +9,11 @@ const MUSIC_VOLUME = 0;
 export class SoundMananger {
   dig: Sound;
   music: Sound;
+  upgrade: Sound;
 
   constructor() {
     this.dig = new Sound("dig", "./sounds/dig.mp3", undefined, () => {}, { loop: true, volume: DIG_VOLUME });
+    this.upgrade = new Sound("dig", "./sounds/upgrade.mp3", undefined, () => {}, {});
     this.music = new Sound(
       "music",
       "./sounds/music.mp3",
@@ -23,21 +25,27 @@ export class SoundMananger {
     );
     this.dig.loop = true;
   }
-  startDig = () => {
-    this.dig.play(0, Math.random() * 4);
-    const gain = this.dig.getSoundGain();
+
+  fadeTo = (sound: Sound, duration: number, frames: number[]) => {
+    const gain = sound.getSoundGain();
     if (gain) {
       gain.gain.value = 0;
-      animateTo(gain.gain, "value", 1, [0, DIG_VOLUME]);
+      return animateTo(gain.gain, "value", duration, frames);
     }
   };
-  stopDig = () => {
-    const gain = this.dig.getSoundGain();
 
-    if (gain) {
-      animateTo(gain.gain, "value", 1, [DIG_VOLUME, 0]).then(() => {
-        this.dig.stop();
-      });
+  startDig = () => {
+    this.dig.play(0, Math.random() * 4);
+    this.fadeTo(this.dig, 1, [0, DIG_VOLUME]);
+  };
+
+  stopDig = async () => {
+    const res = await this.fadeTo(this.dig, 1, [0, DIG_VOLUME]);
+    if (res) {
+      this.dig.stop();
     }
   };
+  playUpgrade() {
+    this.upgrade.play();
+  }
 }
