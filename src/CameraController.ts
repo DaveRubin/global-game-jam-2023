@@ -11,6 +11,7 @@ import {
   Vector3,
 } from "@babylonjs/core";
 import { animateTo, animateToVector } from "./animations";
+import { CustomAssetManger } from "./assetsManager";
 import { createMaterial } from "./materials";
 
 const REGULAR_ZOOM = -12;
@@ -50,7 +51,7 @@ export class CameraConrtoller {
       height: size,
     });
     const m = createMaterial(Color3.White(), "skyMaterial");
-    m.diffuseTexture = new Texture("./textures/gradient.png");
+    m.diffuseTexture = CustomAssetManger.instance.gradient;
     m.specularColor = Color3.Black();
     m.emissiveColor = Color3.White();
     sky.material = m;

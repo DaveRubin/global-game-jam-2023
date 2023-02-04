@@ -1,8 +1,8 @@
 import { Sound } from "@babylonjs/core";
 import { animateTo } from "./animations";
+import { CustomAssetManger } from "./assetsManager";
 
 const DIG_VOLUME = 0.2;
-const MUSIC_VOLUME = 0.3;
 
 export class SoundMananger {
   dig: Sound;
@@ -10,18 +10,12 @@ export class SoundMananger {
   upgrade: Sound;
 
   constructor() {
-    this.dig = new Sound("dig", "./sounds/dig.mp3", undefined, () => {}, { loop: true, volume: DIG_VOLUME });
-    this.upgrade = new Sound("dig", "./sounds/upgrade.mp3", undefined, () => {}, {});
-    this.music = new Sound(
-      "music",
-      "./sounds/music.mp3",
-      undefined,
-      () => {
-        this.music.play();
-      },
-      { loop: true, volume: MUSIC_VOLUME }
-    );
-    this.dig.loop = true;
+    this.dig = CustomAssetManger.instance.dig;
+    this.upgrade = CustomAssetManger.instance.upgrade;
+    this.music = CustomAssetManger.instance.music;
+    this.dig.stop();
+    this.music.stop();
+    this.upgrade.stop();
   }
 
   fadeTo = (sound: Sound, duration: number, frames: number[]) => {

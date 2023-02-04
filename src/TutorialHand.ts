@@ -1,5 +1,6 @@
 import { Color3, Engine, Mesh, MeshBuilder, StandardMaterial, Texture, Vector3 } from "@babylonjs/core";
 import { animateTo } from "./animations";
+import { CustomAssetManger } from "./assetsManager";
 import { DEGREE } from "./consts";
 
 export class TutorialHand {
@@ -8,7 +9,7 @@ export class TutorialHand {
   constructor() {
     this.hand = MeshBuilder.CreatePlane("hand");
     const m = new StandardMaterial("handMaterial");
-    const t = new Texture("./textures/hand.png");
+    const t = CustomAssetManger.instance.hand;
     t.hasAlpha = true;
     m.diffuseTexture = t;
     m.emissiveColor = Color3.White();

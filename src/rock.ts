@@ -1,4 +1,5 @@
 import { Color3, MeshBuilder, StandardMaterial, Texture, Vector3 } from "@babylonjs/core";
+import { CustomAssetManger } from "./assetsManager";
 
 export class Rock {
   ELLIPSOID = new Vector3(0.4, 0.4, 0.4);
@@ -55,10 +56,8 @@ export class Rock {
     const mat = new StandardMaterial("rockMaterial");
     const scale = 2;
     const textures = [];
-    const ao = new Texture("./textures/rock_04_ao_1k.jpg");
-    const bump = new Texture("./textures/rock_04_bump_1k.jpg");
-    const diff = new Texture("./textures/rock_04_diff_1k.jpg");
-    const nor_dx = new Texture("./textures/rock_04_nor_dx_1k.jpg");
+    const { ao, bump, diff } = CustomAssetManger.instance.rock;
+
     mat.ambientTexture = ao;
     mat.bumpTexture = bump;
 
@@ -70,7 +69,6 @@ export class Rock {
     textures.push(ao);
     textures.push(diff);
     textures.push(bump);
-    textures.push(nor_dx);
 
     mat.specularPower = 180;
 

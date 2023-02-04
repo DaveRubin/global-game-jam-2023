@@ -1,4 +1,5 @@
 import { Color3, Engine, StandardMaterial, Texture } from "@babylonjs/core";
+import { CustomAssetManger } from "./assetsManager";
 
 export const createMaterial = (color: Color3, name = "default") => {
   const scene = Engine.LastCreatedScene;
@@ -12,9 +13,8 @@ export const createUndergroundMaterial = () => {
   const mat = new StandardMaterial("underground");
   const scale = 16;
   const textures = [];
-  const diff = new Texture("./textures/forest_ground_04_diff_1k.jpg");
-  const amb = new Texture("./textures/forest_ground_04_ao_1k.jpeg");
-  const norm = new Texture("./textures/forest_ground_04_nor_gl_1k.jpeg");
+
+  const { diff, amb, norm } = CustomAssetManger.instance.ground;
 
   mat.diffuseTexture = diff;
   mat.specularColor = Color3.Black();

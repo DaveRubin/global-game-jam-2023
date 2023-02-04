@@ -11,6 +11,7 @@ import {
   VertexBuffer,
 } from "@babylonjs/core";
 import { animateTo, animateToVector } from "./animations";
+import { CustomAssetManger } from "./assetsManager";
 import { DEGREE } from "./consts";
 import { Leaf } from "./Leaf";
 import { createMaterial } from "./materials";
@@ -42,7 +43,7 @@ export class Plant {
   initParticles = () => {
     const particleSystem = new ParticleSystem("particles", 2000, Engine.LastCreatedScene!);
 
-    particleSystem.particleTexture = new Texture("./textures/Flare.png");
+    particleSystem.particleTexture = CustomAssetManger.instance.particle;
     particleSystem.emitRate = 40;
     particleSystem.minSize = 0.005;
     particleSystem.minSize = 0.2;
