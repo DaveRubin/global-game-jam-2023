@@ -78,7 +78,7 @@ export class Roots {
 
     const testRootStart = MeshBuilder.CreateSphere(
       "testRootStart",
-      { diameter: 0.2 },
+      { diameter: 0.17 },
       this.scene
     );
     animateToVector(
@@ -86,8 +86,6 @@ export class Roots {
       "scaling",
       2,
       [
-        new Vector3(0, 0, 0),
-        new Vector3(0.2, 0.2, 0.2),
         new Vector3(0.4, 0.4, 0.4),
         new Vector3(0.6, 0.6, 0.6),
         new Vector3(0.8, 0.8, 0.8),
@@ -96,7 +94,7 @@ export class Roots {
       false
     );
     testRootStart.material = Plant.instance.material;
-    testRootStart.position = position;
+    testRootStart.position = position.clone();
 
     return this.rootTip;
   }
