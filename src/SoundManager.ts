@@ -1,10 +1,8 @@
 import { Sound } from "@babylonjs/core";
 import { animateTo } from "./animations";
 
-const DIG_VOLUME = 0.1;
+const DIG_VOLUME = 0.2;
 const MUSIC_VOLUME = 0.3;
-// const DIG_VOLUME = 0;
-// const MUSIC_VOLUME = 0;
 
 export class SoundMananger {
   dig: Sound;
