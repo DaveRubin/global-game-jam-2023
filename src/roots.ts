@@ -5,6 +5,8 @@ import {
   Scene,
   Vector3,
 } from "@babylonjs/core";
+import { animateTo } from "./animations";
+import { Plant } from "./plant";
 import { SingleRoot } from "./singleRoot";
 
 export class Roots {
@@ -73,6 +75,15 @@ export class Roots {
     this.rootTip.checkCollisions = true;
     this.rootTip.ellipsoid = new Vector3(0.05, 0.05, 0.05);
     this.isDragging = true;
+
+    const rootStart = MeshBuilder.CreateSphere(
+      "rootStart",
+      { diameter: 0.2 },
+      this.scene
+    );
+    rootStart.material = Plant.instance.material;
+    rootStart.position = position;
+
     return this.rootTip;
   }
 
