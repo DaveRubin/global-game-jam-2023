@@ -147,7 +147,7 @@ class App {
       const diffInMS = Date.now() - lastTick;
       lastTick = Date.now();
       if (roots.touchedWater) {
-        // console.log("aaaaaa", tutorial.isTutorial);
+        game.updateEnergyPerTick(roots.waterConsumed);
         if (tutorial.isTutorial) {
           tutorial.stopDrag();
         }
@@ -155,10 +155,7 @@ class App {
         upgradeSequence();
         finishFollow();
       }
-      // if (roots.getIsDragging()) {
-      //   roots.moveSphere();
-      //   game.updateEnergyPerTick(roots.waterConsumed);
-      // }
+
       if (roots.getIsDragging()) {
         roots.moveRootTip();
         game.useEnergy(diffInMS);
