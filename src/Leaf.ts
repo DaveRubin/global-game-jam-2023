@@ -80,7 +80,7 @@ export class Leaf {
     });
 
     const lastRotation = this.node.rotation.x;
-    const scale = this.stem.scaling.x + 0.2;
+    const scale = this.stem.scaling.x + 0.4;
 
     animateTo(this.node, "rotation.x", 1, [lastRotation, lastRotation * this.growFactor]);
     animateToVector(this.stem, "scaling", 1, [this.stem.scaling, new Vector3(scale, scale, scale)]);

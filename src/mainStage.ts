@@ -1,16 +1,10 @@
-import {
-  Color3,
-  Engine,
-  MeshBuilder,
-  PointLight,
-  TransformNode,
-  Vector3,
-} from "@babylonjs/core";
+import { Color3, Engine, MeshBuilder, PointLight, TransformNode, Vector3 } from "@babylonjs/core";
 import { DEGREE } from "./consts";
 import { createMaterial, createUndergroundMaterial } from "./materials";
 import { Plant } from "./plant";
 import { Rock } from "./rock";
 import { Water } from "./Water";
+import { createNME } from "./WaterBlock";
 
 const groundWidth = 100;
 const skyHeight = 50;
@@ -53,11 +47,7 @@ function createUnderground() {
   dirt.material = createUndergroundMaterial();
   dirt.position.y = -skyHeight / 2;
   dirt.position.z = -0;
-  const light = new PointLight(
-    "point",
-    new Vector3(0, 0, -0.5),
-    Engine.LastCreatedScene!
-  );
+  const light = new PointLight("point", new Vector3(0, 0, -0.5), Engine.LastCreatedScene!);
   light.radius = 1;
   light.range = 5;
   light.intensity = 1;
@@ -80,8 +70,7 @@ function createRocks() {
   for (let i = 0; i < 400; i++) {
     const x = Math.floor(Math.random() * (maxX * 2 + 1)) - maxX;
     const yRange = yRanges[i % yRanges.length];
-    const y =
-      Math.floor(Math.random() * (yRange[1] - yRange[0] + 1)) + yRange[0];
+    const y = Math.floor(Math.random() * (yRange[1] - yRange[0] + 1)) + yRange[0];
     new Rock(new Vector3(x, -y, 0));
   }
 }
@@ -109,8 +98,7 @@ function createWater() {
   for (let i = 0; i < 50; i++) {
     const x = Math.floor(Math.random() * (maxX * 2 + 1)) - maxX;
     const yRange = yRanges[i % yRanges.length];
-    const y =
-      Math.floor(Math.random() * (yRange[0] - yRange[1] + 1)) + yRange[1];
+    const y = Math.floor(Math.random() * (yRange[0] - yRange[1] + 1)) + yRange[1];
     const w = new Water();
     w.transform.position = new Vector3(x, -y, 0);
     waterPools.push(w.waterCollider);
