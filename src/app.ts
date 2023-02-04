@@ -48,7 +48,7 @@ class App {
     const sounds = new SoundMananger();
     const { dirt, waterPools } = createMainStage();
     const tutorial = new TutorialHand();
-    tutorial.showDrag(new Vector3(0.2, -0.45, 0), new Vector3(0.5, -1.4));
+    tutorial.showDrag(new Vector3(0.2, -0.45, 0), new Vector3(0.65, -1.4));
 
     const keysState = { shiftPressed: false };
 
