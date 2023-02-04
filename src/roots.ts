@@ -76,18 +76,16 @@ export class Roots {
     this.rootTip.ellipsoid = new Vector3(0.05, 0.05, 0.05);
     this.isDragging = true;
 
-    const testRootStart = MeshBuilder.CreateSphere(
-      "testRootStart",
-      { diameter: 0.2 },
+    const rootStart = MeshBuilder.CreateSphere(
+      "rootStart",
+      { diameter: 0.17 },
       this.scene
     );
     animateToVector(
-      testRootStart,
+      rootStart,
       "scaling",
       2,
       [
-        new Vector3(0, 0, 0),
-        new Vector3(0.2, 0.2, 0.2),
         new Vector3(0.4, 0.4, 0.4),
         new Vector3(0.6, 0.6, 0.6),
         new Vector3(0.8, 0.8, 0.8),
@@ -95,8 +93,8 @@ export class Roots {
       ],
       false
     );
-    testRootStart.material = Plant.instance.material;
-    testRootStart.position = position;
+    rootStart.material = Plant.instance.material;
+    rootStart.position = position.clone();
 
     return this.rootTip;
   }
