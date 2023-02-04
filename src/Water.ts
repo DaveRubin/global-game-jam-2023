@@ -20,7 +20,7 @@ export class Water {
     const animation = new TransformNode("waterTransform");
     this.mesh = MeshBuilder.CreateSphere("water", { diameter: 1, segments: 4 });
     this.waterCollider = MeshBuilder.CreateSphere("waterCollider", {
-      diameter: 0.5,
+      diameter: 0.1,
       segments: 4,
     });
     this.waterCollider.visibility = 0;
@@ -31,7 +31,6 @@ export class Water {
       Math.random() * 0.3 + 0.5,
       0.2
     );
-    this.mesh.ellipsoid = new Vector3(0.2, 0.2, 0.2);
     const scale1 = Vector3.One();
     const scale2 = new Vector3(
       Math.random() * 0.4 + 0.8,

@@ -1,10 +1,4 @@
-import {
-  Engine,
-  FreeCamera,
-  HemisphericLight,
-  Scene,
-  Vector3,
-} from "@babylonjs/core";
+import { Engine, FreeCamera, HemisphericLight, Scene, Vector3 } from "@babylonjs/core";
 import "@babylonjs/core/Debug/debugLayer";
 import { clipPlaneFragment } from "@babylonjs/core/Shaders/ShadersInclude/clipPlaneFragment";
 import "@babylonjs/inspector";
@@ -20,8 +14,7 @@ import { Roots } from "./roots";
 import { SoundMananger } from "./SoundManager";
 import { TutorialHand } from "./TutorialHand";
 
-const delay = (time: number) =>
-  new Promise((resolve) => setTimeout(resolve, time));
+const delay = (time: number) => new Promise((resolve) => setTimeout(resolve, time));
 
 class App {
   constructor() {
@@ -48,7 +41,7 @@ class App {
     const sounds = new SoundMananger();
     const { dirt, waterPools } = createMainStage();
     const tutorial = new TutorialHand();
-    tutorial.showDrag(new Vector3(0.2, -0.45, 0), new Vector3(0.5, -1.4));
+    tutorial.showDrag(new Vector3(0.25, -0.45, 0), new Vector3(0.65, -1.4));
 
     const keysState = { shiftPressed: false };
 
@@ -92,26 +85,20 @@ class App {
     const roots = new Roots(scene, waterPools);
 
     canvas.addEventListener("pointerdown", (event) => {
-      const pickRoots = scene.pick(event.clientX, event.clientY, (mesh) =>
-        roots.isMeshInRoots(mesh)
-      );
+      const pickRoots = scene.pick(event.clientX, event.clientY, (mesh) => roots.isMeshInRoots(mesh));
       if (pickRoots.hit) {
-        const pickDirt = scene.pick(
-          event.clientX,
-          event.clientY,
-          (mesh) => mesh === dirt
-        );
+        const pickDirt = scene.pick(event.clientX, event.clientY, (mesh) => mesh === dirt);
 
         if (pickDirt.hit && pickDirt.pickedPoint) {
           const target = pickDirt.pickedPoint;
           if (!keysState.shiftPressed) {
             target.z = 0;
-            const sph = roots.createSphere(target);
+            const sph = roots.createRootTip(target);
             controller.startFollow(sph);
             roots.updateMousePosition(target);
             sounds.startDig();
             roots.addRoot();
-            roots.addTime();
+            roots.startRootPointInterval();
           } else {
             controller.goTo(target, true);
           }
@@ -120,13 +107,21 @@ class App {
     });
     const finishFollow = () => {
       sounds.stopDig();
-      roots.deleteSphere();
+      roots.deleteRootTip();
       controller.stopFollow();
     };
 
-    canvas.addEventListener("pointermove", (event) => {
+    canvas.addEventListener("pointerup", () => {
+      if (roots.getIsDragging()) {
+        finishFollow();
+      }
+    });
+
+    let lastTick = Date.now();
+
+    scene.registerBeforeRender(() => {
       if (roots.getIsDragging() && game.timeLeft > 0) {
-        let pickResult = scene.pick(event.clientX, event.clientY, (mesh) => {
+        let pickResult = scene.pick(scene.pointerX, scene.pointerY, (mesh) => {
           return mesh === dirt;
         });
         let target = pickResult.pickedPoint;
@@ -137,19 +132,10 @@ class App {
       } else if (game.timeLeft <= 0) {
         finishFollow();
       }
-    });
-
-    canvas.addEventListener("pointerup", () => {
-      if (roots.getIsDragging()) {
-        finishFollow();
-      }
-    });
-    let lastTick = Date.now();
-    scene.registerBeforeRender(() => {
       const diffInMS = Date.now() - lastTick;
       lastTick = Date.now();
       if (roots.touchedWater) {
-        // console.log("aaaaaa", tutorial.isTutorial);
+        game.updateEnergyPerTick(roots.waterConsumed);
         if (tutorial.isTutorial) {
           tutorial.stopDrag();
         }
@@ -157,12 +143,8 @@ class App {
         upgradeSequence();
         finishFollow();
       }
-      // if (roots.getIsDragging()) {
-      //   roots.moveSphere();
-      //
-      // }
       if (roots.getIsDragging()) {
-        roots.moveSphere();
+        roots.moveRootTip();
         game.useEnergy(diffInMS);
       } else {
         game.updateEnergy(diffInMS);

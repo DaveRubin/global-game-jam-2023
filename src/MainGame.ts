@@ -32,7 +32,7 @@ export class MainGame {
   };
 
   updateEnergyPerTick(level: number) {
-    this.maxTime += level * MS_PER_LEVEL;
+    this.maxTime += level * 0.5 * MS_PER_LEVEL;
     this.recoverFactor += 0.5;
     this.gui.recoverText.text = `+${1 * this.recoverFactor}s / -1s`;
     this.gui.totalTimeText.text = `+${Math.floor(this.maxTime / 100) / 10}s`;
