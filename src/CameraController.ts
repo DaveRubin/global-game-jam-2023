@@ -34,7 +34,7 @@ export class CameraConrtoller {
 
     this.light.parent = this.cameraContainer;
     camera.parent = this.cameraContainer;
-    this.cameraContainer.position.set(0, 0.1, REGULAR_ZOOM);
+    this.cameraContainer.position.set(0, 0.1, CLOSE_UP);
     Engine.LastCreatedScene?.onBeforeRenderObservable.add(() => {
       if (this.target) {
         const diff = this.target.position.subtract(this.cameraContainer.position);
