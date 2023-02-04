@@ -1,10 +1,4 @@
-import {
-  Engine,
-  FreeCamera,
-  HemisphericLight,
-  Scene,
-  Vector3,
-} from "@babylonjs/core";
+import { Engine, FreeCamera, HemisphericLight, Scene, Vector3 } from "@babylonjs/core";
 import "@babylonjs/core/Debug/debugLayer";
 import { clipPlaneFragment } from "@babylonjs/core/Shaders/ShadersInclude/clipPlaneFragment";
 import "@babylonjs/inspector";
@@ -20,8 +14,7 @@ import { Roots } from "./roots";
 import { SoundMananger } from "./SoundManager";
 import { TutorialHand } from "./TutorialHand";
 
-const delay = (time: number) =>
-  new Promise((resolve) => setTimeout(resolve, time));
+const delay = (time: number) => new Promise((resolve) => setTimeout(resolve, time));
 
 class App {
   constructor() {
@@ -61,6 +54,7 @@ class App {
       sounds.playUpgrade();
       // add leaf
       await Plant.instance.addPairOfLeaves(Math.random() * 360);
+      game.updateEnergyPerTick(roots.waterConsumed);
       await delay(1500);
       // increase rate
       controller.isUpgrade = false;
@@ -91,15 +85,9 @@ class App {
     const roots = new Roots(scene, waterPools);
 
     canvas.addEventListener("pointerdown", (event) => {
-      const pickRoots = scene.pick(event.clientX, event.clientY, (mesh) =>
-        roots.isMeshInRoots(mesh)
-      );
+      const pickRoots = scene.pick(event.clientX, event.clientY, (mesh) => roots.isMeshInRoots(mesh));
       if (pickRoots.hit) {
-        const pickDirt = scene.pick(
-          event.clientX,
-          event.clientY,
-          (mesh) => mesh === dirt
-        );
+        const pickDirt = scene.pick(event.clientX, event.clientY, (mesh) => mesh === dirt);
 
         if (pickDirt.hit && pickDirt.pickedPoint) {
           const target = pickDirt.pickedPoint;
@@ -155,7 +143,6 @@ class App {
         upgradeSequence();
         finishFollow();
       }
-
       if (roots.getIsDragging()) {
         roots.moveRootTip();
         game.useEnergy(diffInMS);
