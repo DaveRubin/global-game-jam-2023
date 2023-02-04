@@ -31,6 +31,7 @@ export class Roots {
       this.scene
     );
     this.baseRoot.position.y = -0.2;
+    this.baseRoot.visibility = 0;
     this.waterPools = waterPools;
   }
 
