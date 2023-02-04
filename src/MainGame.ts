@@ -10,9 +10,12 @@ export class MainGame {
   energyPerTick = INITIAL_ENERGY_PER_TICK;
   recoverFactor = 1;
   gui: MainGUI;
+
   constructor() {
     this.gui = new MainGUI();
     this.gui.progress = 1;
+    this.gui.recoverText.text = "+1s / -1s";
+    this.gui.totalTimeText.text = "3s";
   }
 
   changeTime = (delta: number) => {
@@ -31,5 +34,7 @@ export class MainGame {
   updateEnergyPerTick(level: number) {
     this.maxTime += level * MS_PER_LEVEL;
     this.recoverFactor += 0.5;
+    this.gui.recoverText.text = `+${1 * this.recoverFactor}s / -1s`;
+    this.gui.totalTimeText.text = `+${Math.floor(this.maxTime / 100) / 10}s`;
   }
 }

@@ -54,6 +54,7 @@ class App {
       sounds.playUpgrade();
       // add leaf
       await Plant.instance.addPairOfLeaves(Math.random() * 360);
+      game.updateEnergyPerTick(roots.waterConsumed);
       await delay(1500);
       // increase rate
       controller.isUpgrade = false;
@@ -145,7 +146,7 @@ class App {
       }
       // if (roots.getIsDragging()) {
       //   roots.moveSphere();
-      //   game.updateEnergyPerTick(roots.waterConsumed);
+      //
       // }
       if (roots.getIsDragging()) {
         roots.moveSphere();

@@ -27,37 +27,43 @@ const createRect = (background: string, inner?: boolean) => {
 
 const createText = (name: string, initialText: string) => {
   const textBlock = new TextBlock(name);
-  textBlock.text = initialText;
-  textBlock.color = ENERGY;
-  textBlock.width = "330px";
-  textBlock.height = "30px";
   textBlock.verticalAlignment = Control.VERTICAL_ALIGNMENT_TOP;
   textBlock.horizontalAlignment = Control.HORIZONTAL_ALIGNMENT_RIGHT;
+  textBlock.textHorizontalAlignment = Control.HORIZONTAL_ALIGNMENT_LEFT;
+  textBlock.text = initialText;
+  textBlock.color = ENERGY;
+  textBlock.width = "170px";
+  textBlock.height = "30px";
   textBlock.top = "75px";
   return textBlock;
 };
 
 export class MainGUI {
   private background: Rectangle;
-  private forground: Rectangle;
-  private progressText: TextBlock;
+  private foreground: Rectangle;
+  recoverText: TextBlock;
+  totalTimeText: TextBlock;
 
   constructor() {
     this.background = createRect("white");
-    this.forground = createRect(ENERGY, true);
-    this.progressText = createText("progressText", "+1");
-    this.background.addControl(this.forground);
+    this.foreground = createRect(ENERGY, true);
+    this.recoverText = createText("progressText", "");
+    this.totalTimeText = createText("progressText", "3s");
+    this.totalTimeText.top = "40px";
+    this.totalTimeText.color = "blue";
+    this.totalTimeText.paddingRight = "50px";
+
+    this.totalTimeText.textHorizontalAlignment = Control.HORIZONTAL_ALIGNMENT_RIGHT;
+
+    this.background.addControl(this.foreground);
 
     const advancedTexture = AdvancedDynamicTexture.CreateFullscreenUI("UI", true, Engine.LastCreatedScene);
     advancedTexture.addControl(this.background);
-    advancedTexture.addControl(this.progressText);
-  }
-
-  set progressRatio(text: number) {
-    this.progressText.text = `+${text}`;
+    advancedTexture.addControl(this.recoverText);
+    advancedTexture.addControl(this.totalTimeText);
   }
 
   set progress(progres: number) {
-    this.forground.left = `${progres * BAR_WIDTH - BAR_WIDTH}px`;
+    this.foreground.left = `${progres * BAR_WIDTH - BAR_WIDTH}px`;
   }
 }
