@@ -123,9 +123,17 @@ class App {
       controller.stopFollow();
     };
 
-    canvas.addEventListener("pointermove", (event) => {
+    canvas.addEventListener("pointerup", () => {
+      if (roots.getIsDragging()) {
+        finishFollow();
+      }
+    });
+
+    let lastTick = Date.now();
+
+    scene.registerBeforeRender(() => {
       if (roots.getIsDragging() && game.timeLeft > 0) {
-        let pickResult = scene.pick(event.clientX, event.clientY, (mesh) => {
+        let pickResult = scene.pick(scene.pointerX, scene.pointerY, (mesh) => {
           return mesh === dirt;
         });
         let target = pickResult.pickedPoint;
@@ -136,15 +144,6 @@ class App {
       } else if (game.timeLeft <= 0) {
         finishFollow();
       }
-    });
-
-    canvas.addEventListener("pointerup", () => {
-      if (roots.getIsDragging()) {
-        finishFollow();
-      }
-    });
-    let lastTick = Date.now();
-    scene.registerBeforeRender(() => {
       const diffInMS = Date.now() - lastTick;
       lastTick = Date.now();
       if (roots.touchedWater) {
