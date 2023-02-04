@@ -105,12 +105,12 @@ class App {
           const target = pickDirt.pickedPoint;
           if (!keysState.shiftPressed) {
             target.z = 0;
-            const sph = roots.createSphere(target);
+            const sph = roots.createRootTip(target);
             controller.startFollow(sph);
             roots.updateMousePosition(target);
             sounds.startDig();
             roots.addRoot();
-            roots.addTime();
+            roots.startRootPointInterval();
           } else {
             controller.goTo(target, true);
           }
@@ -119,7 +119,7 @@ class App {
     });
     const finishFollow = () => {
       sounds.stopDig();
-      roots.deleteSphere();
+      roots.deleteRootTip();
       controller.stopFollow();
     };
 
@@ -161,7 +161,7 @@ class App {
       //   game.updateEnergyPerTick(roots.waterConsumed);
       // }
       if (roots.getIsDragging()) {
-        roots.moveSphere();
+        roots.moveRootTip();
         game.useEnergy(diffInMS);
       } else {
         game.updateEnergy(diffInMS);

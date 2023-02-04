@@ -17,7 +17,7 @@ export class Roots {
   rootsPoints: Vector3[][] = [[Vector3.Zero()]];
   currentRoot: number = 0;
   roots: SingleRoot[] = [];
-  sphere!: Mesh;
+  rootTip!: Mesh;
   rootSpeed = 0.015;
   touchedWater: boolean = false;
 
@@ -53,44 +53,43 @@ export class Roots {
   }
 
   addRootPoint() {
-    this.rootsPoints[this.currentRoot].push(this.sphere.position.clone());
+    this.rootsPoints[this.currentRoot].push(this.rootTip.position.clone());
   }
 
-  addTime() {
+  startRootPointInterval() {
     this.timer = setInterval(() => {
       this.addRootPoint();
     }, 300);
   }
 
-  createSphere(position: Vector3) {
-    this.sphere = MeshBuilder.CreateSphere(
-      "sphere",
+  createRootTip(position: Vector3) {
+    this.rootTip = MeshBuilder.CreateSphere(
+      "rootTip",
       { diameter: 0.2 },
       this.scene
     );
-    this.sphere.visibility = 0;
-    this.sphere.position = position;
-    this.sphere.checkCollisions = true;
-    this.sphere.ellipsoid = new Vector3(0.08, 0.08, 0.08);
+    this.rootTip.visibility = 0;
+    this.rootTip.position = position;
+    this.rootTip.checkCollisions = true;
+    this.rootTip.ellipsoid = new Vector3(0.05, 0.05, 0.05);
     this.isDragging = true;
-    return this.sphere;
+    return this.rootTip;
   }
 
-  deleteSphere() {
-    this.sphere.dispose();
+  deleteRootTip() {
+    this.rootTip.dispose();
     clearInterval(this.timer);
     this.touchedWater = false;
     this.isDragging = false;
   }
 
-  moveSphere() {
-    const direction = this.currentMousePosition.subtract(this.sphere.position);
+  moveRootTip() {
+    const direction = this.currentMousePosition.subtract(this.rootTip.position);
     const distance = direction.length();
     direction.normalize();
 
-    // Move the sphere in the direction of the mouse with speed 1
     if (distance > 0.1) {
-      this.sphere?.moveWithCollisions(
+      this.rootTip?.moveWithCollisions(
         new Vector3(
           direction.x * this.rootSpeed,
           direction.y * this.rootSpeed,
@@ -99,7 +98,7 @@ export class Roots {
       );
       this.roots[this.currentRoot].update([
         ...this.rootsPoints[this.currentRoot],
-        this.sphere.position,
+        this.rootTip.position,
       ]);
       this.checkIfRootConsumesWater(this.roots[this.currentRoot]);
     }
