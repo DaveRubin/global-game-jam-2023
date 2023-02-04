@@ -37,8 +37,7 @@ class App {
     );
     mainLight.intensity = 0.2;
     const game = new MainGame();
-    const mainGui = new MainGUI();
-    mainGui.progress = game.energyRatio;
+
     const sounds = new SoundMananger();
     const { dirt, waterPools } = createMainStage();
     const tutorial = new TutorialHand();
@@ -158,7 +157,6 @@ class App {
 
     // run the main render loop
     engine.runRenderLoop(() => {
-      mainGui.progress = game.energyRatio;
       scene.render();
     });
   }
