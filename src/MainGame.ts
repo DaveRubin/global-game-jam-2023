@@ -1,33 +1,35 @@
-const INITIAL_ENERGY = 1000;
-const ENERGY_USAGE = 5;
+const INITIAL_ENERGY = 3000;
+const MS_PER_LEVEL = 2000;
 const INITIAL_ENERGY_PER_TICK = 2;
 
 export class MainGame {
-  maxEnergy = INITIAL_ENERGY;
-  currentEnergy = INITIAL_ENERGY;
+  maxTime = INITIAL_ENERGY;
+  timeLeft = INITIAL_ENERGY;
   energyPerTick = INITIAL_ENERGY_PER_TICK;
+  recoverFactor = 1;
 
   constructor() {}
 
   get energyRatio() {
-    return this.currentEnergy / this.maxEnergy;
+    return this.timeLeft / this.maxTime;
   }
 
-  updateEnergy = () => {
-    this.currentEnergy += this.energyPerTick;
-    if (this.currentEnergy > this.maxEnergy) {
-      this.currentEnergy = this.maxEnergy;
+  updateEnergy = (timeInMS: number) => {
+    this.timeLeft += timeInMS * this.recoverFactor;
+    if (this.timeLeft > this.maxTime) {
+      this.timeLeft = this.maxTime;
     }
   };
 
-  useEnergy = () => {
-    this.currentEnergy -= ENERGY_USAGE;
-    if (this.currentEnergy < 0) {
-      this.currentEnergy = 0;
+  useEnergy = (timeInMS: number) => {
+    this.timeLeft -= timeInMS;
+    if (this.timeLeft < 0) {
+      this.timeLeft = 0;
     }
   };
 
-  updateEnergyPerTick(energyPerTick) {
-    this.energyPerTick = INITIAL_ENERGY_PER_TICK + energyPerTick;
+  updateEnergyPerTick(level: number) {
+    this.maxTime += level * MS_PER_LEVEL;
+    this.recoverFactor += 0.5;
   }
 }

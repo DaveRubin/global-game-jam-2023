@@ -112,7 +112,7 @@ class App {
     };
 
     canvas.addEventListener("pointermove", (event) => {
-      if (roots.getIsDragging() && game.currentEnergy > 0) {
+      if (roots.getIsDragging() && game.timeLeft > 0) {
         let pickResult = scene.pick(event.clientX, event.clientY, (mesh) => {
           return mesh === dirt;
         });
@@ -121,7 +121,7 @@ class App {
           target.z = 0;
           roots.updateMousePosition(target);
         }
-      } else if (game.currentEnergy <= 0) {
+      } else if (game.timeLeft <= 0) {
         finishFollow();
       }
     });
@@ -131,8 +131,10 @@ class App {
         finishFollow();
       }
     });
-
+    let lastTick = Date.now();
     scene.registerBeforeRender(() => {
+      const diffInMS = Date.now() - lastTick;
+      lastTick = Date.now();
       if (roots.touchedWater) {
         // console.log("aaaaaa", tutorial.isTutorial);
         if (tutorial.isTutorial) {
@@ -142,20 +144,20 @@ class App {
         upgradeSequence();
         finishFollow();
       }
+      // if (roots.getIsDragging()) {
+      //   roots.moveSphere();
+      //   game.updateEnergyPerTick(roots.waterConsumed);
+      // }
       if (roots.getIsDragging()) {
         roots.moveSphere();
-        game.updateEnergyPerTick(roots.waterConsumed);
+        game.useEnergy(diffInMS);
+      } else {
+        game.updateEnergy(diffInMS);
       }
     });
 
     // run the main render loop
     engine.runRenderLoop(() => {
-      if (!roots.getIsDragging()) {
-        game.updateEnergy();
-      } else {
-        game.useEnergy();
-      }
-
       mainGui.progress = game.energyRatio;
       scene.render();
     });
