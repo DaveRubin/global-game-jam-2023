@@ -602,7 +602,7 @@ export const createNME = () => {
   amp1.visibleInInspector = false;
   amp1.visibleOnFrame = false;
   amp1.target = 1;
-  amp1.value = 0.47;
+  amp1.value = 0;
   amp1.min = 0;
   amp1.max = 1;
   amp1.isBoolean = false;
@@ -639,7 +639,7 @@ export const createNME = () => {
   Structure1.visibleInInspector = false;
   Structure1.visibleOnFrame = false;
   Structure1.target = 1;
-  Structure1.value = 2;
+  Structure1.value = 0;
   Structure1.min = 0;
   Structure1.max = 2;
   Structure1.isBoolean = false;
@@ -1083,13 +1083,14 @@ export const createNME = () => {
   SimplexPerlinD23.visibleInInspector = false;
   SimplexPerlinD23.visibleOnFrame = false;
   SimplexPerlinD23.target = 4;
-
+  const MORPH = 0;
+  //   const MORPH = 0.31;
   // InputBlock
   var InputBlock_72 = new BABYLON.InputBlock("");
   InputBlock_72.visibleInInspector = false;
   InputBlock_72.visibleOnFrame = false;
   InputBlock_72.target = 1;
-  InputBlock_72.value = 0.31;
+  InputBlock_72.value = MORPH;
   InputBlock_72.min = 0;
   InputBlock_72.max = 1;
   InputBlock_72.isBoolean = false;
